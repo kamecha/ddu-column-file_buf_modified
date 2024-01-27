@@ -14,34 +14,27 @@ export type Params = {
 
 export class Column extends BaseColumn<Params> {
   #bufinfos: fn.BufInfo[] = [];
+  #textEncoder: TextEncoder = new TextEncoder();
 
   override async getLength(args: GetLengthArguments<Params>): Promise<number> {
     this.#bufinfos = await fn.getbufinfo(args.denops, { bufmodified: true });
-    const modifiedIconLength = await fn.strlen(
-      args.denops,
-      args.columnParams.modifiedIcon,
-    );
-    const unmodifiedIconLength = await fn.strlen(
-      args.denops,
-      args.columnParams.unmodifiedIcon,
-    );
+    const modifiedIconLength =
+      this.#textEncoder.encode(args.columnParams.modifiedIcon).length;
+    const unmodifiedIconLength =
+      this.#textEncoder.encode(args.columnParams.unmodifiedIcon).length;
     const length = Math.max(modifiedIconLength, unmodifiedIconLength);
     return length;
   }
 
-  override async getText(
+  override getText(
     args: GetTextArguments<Params>,
   ): Promise<GetTextResult> {
     const action = args.item.action as ActionData;
     const path = action.path;
-    const modifiedIconLength = await fn.strlen(
-      args.denops,
-      args.columnParams.modifiedIcon,
-    );
-    const unmodifiedIconLength = await fn.strlen(
-      args.denops,
-      args.columnParams.unmodifiedIcon,
-    );
+    const modifiedIconLength =
+      this.#textEncoder.encode(args.columnParams.modifiedIcon).length;
+    const unmodifiedIconLength =
+      this.#textEncoder.encode(args.columnParams.unmodifiedIcon).length;
     if (path === undefined) {
       return Promise.resolve({
         text: args.columnParams.unmodifiedIcon +
