@@ -29,7 +29,7 @@ https://github.com/vim-denops/denops.vim
 EXAMPLES                                        *ddu-column-file_buf_modified-examples*
 >
 	call ddu#custom#patch_global(#{
-	    \   columns: ['file_buf_modified'],
+	    \   columns: ['filename', 'file_buf_modified'],
 	    \ })
 <
 
