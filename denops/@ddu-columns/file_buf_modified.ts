@@ -14,6 +14,7 @@ export type Params = {
 
 export class Column extends BaseColumn<Params> {
   #bufinfos: fn.BufInfo[] = [];
+
   async getLength(args: GetLengthArguments<Params>): Promise<number> {
     this.#bufinfos = await fn.getbufinfo(args.denops, { bufmodified: true });
     const modifiedIconLength = await fn.strlen(
@@ -27,6 +28,7 @@ export class Column extends BaseColumn<Params> {
     const length = Math.max(modifiedIconLength, unmodifiedIconLength);
     return length;
   }
+
   getText(args: GetTextArguments<Params>): Promise<GetTextResult> {
     const action = args.item.action as ActionData;
     const path = action.path;
@@ -48,12 +50,14 @@ export class Column extends BaseColumn<Params> {
       });
     }
   }
+
   params(): Params {
     return {
       modifiedIcon: "●",
       unmodifiedIcon: " ",
     };
   }
+
   isBufferRelatedFileModified(
     buffers: fn.BufInfo[],
     filePath: string,
