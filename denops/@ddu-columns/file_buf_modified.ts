@@ -29,24 +29,26 @@ export class Column extends BaseColumn<Params> {
     return length;
   }
 
-  override getText(args: GetTextArguments<Params>): Promise<GetTextResult> {
+  override async getText(args: GetTextArguments<Params>): Promise<GetTextResult> {
     const action = args.item.action as ActionData;
     const path = action.path;
+    const modifiedIconLength = await fn.strlen(args.denops, args.columnParams.modifiedIcon);
+    const unmodifiedIconLength = await fn.strlen(args.denops, args.columnParams.unmodifiedIcon);
     if (path === undefined) {
       return Promise.resolve({
         text: args.columnParams.unmodifiedIcon +
-          " ".repeat(args.endCol - args.startCol),
+          " ".repeat(args.endCol - args.startCol - modifiedIconLength),
       });
     }
     if (this.isBufferRelatedFileModified(this.#bufinfos, path)) {
       return Promise.resolve({
         text: args.columnParams.modifiedIcon +
-          " ".repeat(args.endCol - args.startCol),
+          " ".repeat(args.endCol - args.startCol - modifiedIconLength),
       });
     } else {
       return Promise.resolve({
         text: args.columnParams.unmodifiedIcon +
-          " ".repeat(args.endCol - args.startCol),
+          " ".repeat(args.endCol - args.startCol - unmodifiedIconLength),
       });
     }
   }
